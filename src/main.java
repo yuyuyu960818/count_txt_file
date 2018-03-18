@@ -11,7 +11,7 @@ import java.io.BufferedReader;
 public class main {
 	
 	
-	public static int countline(String pathname)
+	public static int countline(String pathname)//计算行数，挨个读取文件中行，读取到一行+1
 	{
 		int line = 0;
 		File file = new File(pathname);
@@ -30,7 +30,7 @@ public class main {
 		return line;
 	}
 	
-	public static int countcharacter(String pathname)
+	public static int countcharacter(String pathname)//计算字符数，挨个读取文件中字符，读取到一个+1
 	{
 		int charnum = 0;
 		File file = new File(pathname);
@@ -51,7 +51,7 @@ public class main {
 		return charnum;
 	}
 	
-	public static int countword(String pathname,String stoppathname,int way)
+	public static int countword(String pathname,String stoppathname,int way)//读取文件的词数，支持缺词表功能
 	{
 		int wordnum = 0;
 		File file = new File(pathname);
@@ -66,7 +66,7 @@ public class main {
             //读非停用词表
             while ((tempchar = reader.read()) != -1) 
             {          
-            	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z')) 
+            	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z')) //是单词时候计1
             	{
                     if(isword ==false)
                     {
@@ -77,7 +77,7 @@ public class main {
                 }
             	else
             	{
-            		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')
+            		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')//发现分隔符后进入下一个单词读取
             		{
             			isword = false;
             			if(addword!="")
@@ -99,13 +99,11 @@ public class main {
             addword = "";
             if(way == 2)
             {
-            	
-            	//System.out.println(stoppathname);
             	 File file2 = new File(stoppathname);
             	 BufferedReader reader2 = new BufferedReader(new FileReader(file2));
             	 while ((tempchar = reader2.read()) != -1) 
                  {          
-                 	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z')) 
+                 	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z')) //
                  	{
                          if(isword ==false)
                          {
@@ -116,7 +114,7 @@ public class main {
                      }
                  	else
                  	{
-                 		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')
+                 		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')//
                  		{
                  			isword = false;
                  			if(addword!="")
@@ -140,11 +138,9 @@ public class main {
                  {
                 	 for(String sword : stopword)
                 	 {
-                		 //System.out.println(sword);
                 		 if(rword.equals(sword))
                 		 {
                 			 wordnum--;
-                			 System.out.println(rword);
                 		 }
                 	 }
                  }
@@ -180,7 +176,6 @@ public class main {
 		        					 break;
 		        				 }
 		        		 }
-		        		 //System.out.println("noteline++1");
 		        		 line[2]++;
 		        		 continue;
 		        	}
@@ -190,7 +185,6 @@ public class main {
 		            {
 		            	line[1]++;
 		              	iscode = false;
-		              	//System.out.println("empytline++");
 		            }
 		            else 
 		            {
@@ -205,10 +199,9 @@ public class main {
 		                	}
 		                	if(checknote)
 		                	{
-		                		if(!islongnote&&tempString.charAt(i)=='/'&&i<tempString.length()-1)
+		                		if(!islongnote&&tempString.charAt(i)=='/'&&i<tempString.length()-1)//判断/*
 		                			if(tempString.charAt(i+1)=='*')
 		                			{
-		                				//System.out.println("noteline++2");
 		                				line[2]++;
 		                				islongnote = true;
 		                				isnote = false;	
@@ -219,7 +212,6 @@ public class main {
 			                		if(tempString.charAt(i+1)=='/')
 			                		{
 			                			line[2]++;
-		                				//System.out.println("noteline++3");
 		                				iscode = false;
 		                				checknote = false;
 			                		}
@@ -227,12 +219,12 @@ public class main {
 		                	}
 		                	else
 		                	{
-		                		if(tempString.charAt(i)=='/'&&i<tempString.length()-1)
+		                		if(tempString.charAt(i)=='/'&&i<tempString.length()-1)//判断/*
 		                			if(tempString.charAt(i+1)=='*')
 		                			{
 		                				islongnote = true;
 		                			}	     
-		                		if(islongnote)		                
+		                		if(islongnote)		                //判断*/
 		                			if(tempString.charAt(i)=='*'&&i<tempString.length()-1)
 			                			if(tempString.charAt(i+1)=='/'&&i<tempString.length()-1)
 			                			{
@@ -246,7 +238,6 @@ public class main {
 		            if(iscode)
 		            {
 		                line[3]++;
-		                //System.out.println("codeline++");
 		            }
 		            else
 		            {
@@ -287,8 +278,7 @@ public class main {
 				File outfile = new File(outpathname);
 	        	FileWriter fw = new FileWriter(outfile);  
 	        	BufferedWriter out = new BufferedWriter(fw);   
-	        	out.write(outstr);
-	        	//System.out.print("out");		       
+	        	out.write(outstr);       
 	        	out.flush(); // 把缓存区内容压入文件  
 	        	out.close(); // 最后记得关闭文件  
 				}
@@ -315,11 +305,11 @@ public class main {
 		boolean Needo = false;
 		boolean Needa = false;
 		boolean Needs = false;
-		boolean Neede = false;
+		boolean Neede = false;//这几个Need在下面判断，是否用到-*的功能
 		int countnum = 0;//记录要进行几种计算，便于确定参数里面的文件名的位置
 		for(String par : args)//遍历参数看进行什么计算
 		{
-			System.out.println(par);
+			//System.out.println(par);
 			if(par.equals(strc))
 				{Needc = true;countnum++;}
 			if(par.equals(strw))
@@ -383,14 +373,12 @@ public class main {
 			}
 		}
 		else
-		{
-			System.out.println("run to here");
+		{//读取目录下所有符合要求文件，然后进行检测
 			int suffixplace = 0;
 			if(Needo)
 				suffixplace++;
 			if(Neede)
 				suffixplace++;
-			//System.out.println(suffix);
 			for(;countnum<args.length-suffixplace-suffixplace;countnum++)
 			{
 				if(Needc)
@@ -427,42 +415,7 @@ public class main {
 					outstr = outstr + args[countnum] + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + " \r\n";
 				}
 			}
-			
-			/*for (int i = 0; i < tempList.length; i++)
-			{
-				if (tempList[i].isFile()) 
-				{				
-					//读取某个文件夹下的所有文件,然后选出.c结尾的文件
-					if(tempList[i].getName().endsWith(suffix))
-					{
-						System.out.println("文件："+tempList[i].getName());
-						if(Needc)
-						{
-							int charnum = countcharacter(tempList[i].getName());
-							outstr = outstr + tempList[i].getName() + ",字符数：" + charnum + " \r\n";
-						}
-						if(Needw)
-						{
-							int wordnum = countword(tempList[i].getName());
-							outstr = outstr + tempList[i].getName() + ",单词数：" + wordnum + "\r\n";
-						}
-						if(Needl)
-						{
-							int linenum = countline(tempList[i].getName());
-							outstr = outstr + tempList[i].getName() + ",行数：" + linenum + " \r\n";
-						}
-						if(Needa)
-						{
-							int clinenum[] = new int [4];
-							clinenum = complicatedline(tempList[i].getName());
-							outstr = outstr + tempList[i].getName() + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + " \r\n";
-						}
-						//判断是否制定了输入的文件，没有指定的话输入进result.txt
 						
-					}
-				}
-
-			}*/
 			if(Needo)
 			{
 				outputresult(1,outstr,args[args.length-1]);
@@ -472,10 +425,7 @@ public class main {
 				outputresult(2,outstr,strc);
 			}
 		}
-		
-		
-		
-		
+			
 	}
 	
 }
