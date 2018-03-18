@@ -10,21 +10,22 @@ import java.io.BufferedReader;
 
 public class main {
 	
-	
 	public static int countline(String pathname)//计算行数，挨个读取文件中行，读取到一行+1
 	{
 		int line = 0;
 		File file = new File(pathname);
-		try {
+		try 
+		{
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String tempString = null;       
-            while ((tempString = reader.readLine()) != null) {          
-                line++;
-               
+            while ((tempString = reader.readLine()) != null) 
+            {          
+                line++;               
             }
             reader.close();
             
-        } catch (Exception e) {
+        } catch (Exception e) 
+        {
             e.printStackTrace();
         }
 		return line;
@@ -34,18 +35,22 @@ public class main {
 	{
 		int charnum = 0;
 		File file = new File(pathname);
-		try {
+		try 
+		{
             BufferedReader reader = new BufferedReader(new FileReader(file));
             int tempchar;
-            
-            while ((tempchar = reader.read()) != -1) {          
-            	if (((char) tempchar) != '\r'&&((char) tempchar) != '\n') {
+            while ((tempchar = reader.read()) != -1)
+            {          
+            	if (((char) tempchar) != '\r'&&((char) tempchar) != '\n')
+            	{
                     charnum++;
                 }
             }
             reader.close();
            
-        } catch (Exception e) {
+        } 
+		catch (Exception e)
+        {
             e.printStackTrace();
         }
 		return charnum;
@@ -103,7 +108,7 @@ public class main {
             	 BufferedReader reader2 = new BufferedReader(new FileReader(file2));
             	 while ((tempchar = reader2.read()) != -1) 
                  {          
-                 	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z')) //
+                 	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z'))//是单词时候计1
                  	{
                          if(isword ==false)
                          {
@@ -114,7 +119,7 @@ public class main {
                      }
                  	else
                  	{
-                 		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')//
+                 		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')//发现分隔符后进入下一个单词读取
                  		{
                  			isword = false;
                  			if(addword!="")
@@ -165,7 +170,7 @@ public class main {
 		        String tempString = null;		            
 		        while ((tempString = reader.readLine()) != null)
 		        {    
-		        	if(islongnote)
+		        	if(islongnote)//看这一行是否在长注释里
 		        	{
 		        		 for(int i = 0;i<tempString.length();i++)
 		        		 {
@@ -181,7 +186,7 @@ public class main {
 		        	}
 		        	
 		            line[0]++;
-		            if(tempString.isEmpty())
+		            if(tempString.isEmpty())//记录空行
 		            {
 		            	line[1]++;
 		              	iscode = false;
@@ -208,7 +213,7 @@ public class main {
 		                				iscode = false;	
 		                				checknote = false;
 		                			}	         
-			                	if(!islongnote&&!isnote&&tempString.charAt(i)=='/'&&i<tempString.length()-1)
+			                	if(!islongnote&&!isnote&&tempString.charAt(i)=='/'&&i<tempString.length()-1)//判断//
 			                		if(tempString.charAt(i+1)=='/')
 			                		{
 			                			line[2]++;
@@ -235,7 +240,7 @@ public class main {
 		                }
 		                	
 		            }
-		            if(iscode)
+		            if(iscode)//记录代码行
 		            {
 		                line[3]++;
 		            }
@@ -307,6 +312,7 @@ public class main {
 		boolean Needs = false;
 		boolean Neede = false;//这几个Need在下面判断，是否用到-*的功能
 		int countnum = 0;//记录要进行几种计算，便于确定参数里面的文件名的位置
+		//System.out.println()
 		for(String par : args)//遍历参数看进行什么计算
 		{
 			//System.out.println(par);
@@ -374,49 +380,50 @@ public class main {
 		}
 		else
 		{//读取目录下所有符合要求文件，然后进行检测
-			int suffixplace = 0;
-			if(Needo)
-				suffixplace++;
-			if(Neede)
-				suffixplace++;
-			for(;countnum<args.length-suffixplace-suffixplace;countnum++)
-			{
-				if(Needc)
-				{
-					int charnum = countcharacter(args[countnum]);
-					outstr = outstr + args[countnum]+ ",字符数：" + charnum + " \r\n";
-				}
-				if(Needw)
-				{
-					if(!Neede)
+			
+			File file = new File("./");   
+	        // 获得该文件夹内的所有文件   
+	        File[] array = file.listFiles();   
+	        for(int i=0;i<array.length;i++)
+	        {   
+	            if(array[i].isFile()&&array[i].getName().endsWith(args[countnum].substring(1)))//如果是文件，检查后缀名是否相符
+	            {   
+	            	if(Needc)//依次检查是否进行计算字符数、单词、行数等操作
 					{
-						int wordnum = countword(args[countnum],args[countnum],1);
-						outstr = outstr + args[countnum] + ",单词数：" + wordnum + "\r\n";
+						int charnum = countcharacter(array[i].getName());
+						outstr = outstr + array[i].getName()+ ",字符数：" + charnum + " \r\n";
 					}
-					else
+					if(Needw)
 					{
-						int wordnum;
-						if(Needo)
-							wordnum = countword(args[countnum],args[args.length-3],2);
+						if(!Neede)
+						{
+							int wordnum = countword(array[i].getName(),array[i].getName(),1);
+							outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
+						}
 						else
-							wordnum = countword(args[countnum],args[args.length-1],2);
-						outstr = outstr + args[countnum] + ",单词数：" + wordnum + "\r\n";
+						{
+							int wordnum;
+							if(Needo)
+								wordnum = countword(array[i].getName(),args[args.length-3],2);
+							else
+								wordnum = countword(array[i].getName(),args[args.length-1],2);
+							outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
+						}
 					}
-				}
-				if(Needl)
-				{
-					int linenum = countline(args[countnum]);
-					outstr = outstr + args[countnum] + ",行数：" + linenum + " \r\n";
-				}
-				if(Needa)
-				{
-					int clinenum[] = new int [4];
-					clinenum = complicatedline(args[countnum]);
-					outstr = outstr + args[countnum] + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + " \r\n";
-				}
-			}
-						
-			if(Needo)
+					if(Needl)
+					{
+						int linenum = countline(array[i].getName());
+						outstr = outstr + array[i].getName() + ",行数：" + linenum + " \r\n";
+					}
+					if(Needa)
+					{
+						int clinenum[] = new int [4];
+						clinenum = complicatedline(array[i].getName());
+						outstr = outstr + array[i].getName() + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + " \r\n";
+					}
+	            }	            
+	        }
+	        if(Needo)
 			{
 				outputresult(1,outstr,args[args.length-1]);
 			}
@@ -424,8 +431,8 @@ public class main {
 			{
 				outputresult(2,outstr,strc);
 			}
-		}
-			
+	       
+		} 		
 	}
 	
 }
