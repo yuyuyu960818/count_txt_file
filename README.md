@@ -1,0 +1,3 @@
+# count_txt_file
+一个java小程序，能统计.c文件的行数、单词数、字符数等信息
+第一次完成基础功能呢的commit和第二次完成进阶功能的commit都命名为firstcommit
