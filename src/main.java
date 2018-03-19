@@ -40,11 +40,9 @@ public class main {
             BufferedReader reader = new BufferedReader(new FileReader(file));
             int tempchar;
             while ((tempchar = reader.read()) != -1)
-            {          
-            	if (((char) tempchar) != '\r'&&((char) tempchar) != '\n')
-            	{
-                    charnum++;
-                }
+            {   
+            	if((char)tempchar !='\r')//白盒测试中，包括18号博客园更改了需求，更改这一部分判断内容
+                    charnum++;               
             }
             reader.close();
            
@@ -71,26 +69,25 @@ public class main {
             //读非停用词表
             while ((tempchar = reader.read()) != -1) 
             {          
-            	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z')) //是单词时候计1
+            	if (((char) tempchar) !=','&&((char) tempchar)!=' '&&((char) tempchar)!='\n'&&((char) tempchar)!='\r') //是单词时候计1
             	{
+            		//(((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z')
                     if(isword ==false)
                     {
                     	isword = true;
                     	wordnum++;
                     }
                     addword = addword + (char) tempchar;
+                    
                 }
             	else
-            	{
-            		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')//发现分隔符后进入下一个单词读取
-            		{
+            	{          		
             			isword = false;
             			if(addword!="")
              			{
-             				readword.add(addword);
+             				readword.add(addword);           				
              				addword = "";
-             			}
-            		}
+             			}            		
             	}
             }
             reader.close();
@@ -108,28 +105,22 @@ public class main {
             	 BufferedReader reader2 = new BufferedReader(new FileReader(file2));
             	 while ((tempchar = reader2.read()) != -1) 
                  {          
-                 	if ((((char) tempchar) >='a'&& ((char) tempchar) <='z') || ((((char) tempchar) >= 'A')&&((char) tempchar) <= 'Z'))//是单词时候计1
+                 	if (((char) tempchar) !=','&&((char) tempchar)!=' '&&((char) tempchar)!='\n'&&((char) tempchar)!='\r')//是单词时候计1
                  	{
                          if(isword ==false)
                          {
-                         	isword = true;
-                         	
+                         	isword = true;                       	
                          }
                          addword = addword + (char) tempchar;
                      }
                  	else
-                 	{
-                 		if(((char) tempchar) ==','||((char) tempchar)==' '||((char) tempchar)=='\n'||((char) tempchar)=='\r')//发现分隔符后进入下一个单词读取
-                 		{
+                 	{                 		
                  			isword = false;
                  			if(addword!="")
                  			{
                  				stopword.add(addword);
                  				addword = "";
-                 			}
-                 			
-                 			
-                 		}
+                 			}                 			                 	                		
                  	}
                  }
             	 reader2.close();
@@ -337,7 +328,7 @@ public class main {
 			if(Needc)
 			{
 				int charnum = countcharacter(args[countnum]);
-				outstr = outstr + args[countnum] + ",字符数：" + charnum + " \r\n";
+				outstr = outstr + args[countnum] + ",字符数：" + charnum + "\r\n";
 			}
 			if(Needw)
 			{
@@ -360,13 +351,13 @@ public class main {
 			if(Needl)
 			{
 				int linenum = countline(args[countnum]);
-				outstr = outstr + args[countnum] + ",行数：" + linenum + " \r\n";
+				outstr = outstr + args[countnum] + ",行数：" + linenum + "\r\n";
 			}
 			if(Needa)
 			{
 				int clinenum[] = new int [4];
 				clinenum = complicatedline(args[countnum]);
-				outstr = outstr + args[countnum] + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + " \r\n";
+				outstr = outstr + args[countnum] + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + "\r\n";
 			}
 			//判断是否制定了输入的文件，没有指定的话输入进result.txt
 			if(Needo)
@@ -380,57 +371,125 @@ public class main {
 		}
 		else
 		{//读取目录下所有符合要求文件，然后进行检测
-			
-			File file = new File("./");   
-	        // 获得该文件夹内的所有文件   
-	        File[] array = file.listFiles();   
-	        for(int i=0;i<array.length;i++)
-	        {   
-	            if(array[i].isFile()&&array[i].getName().endsWith(args[countnum].substring(1)))//如果是文件，检查后缀名是否相符
-	            {   
-	            	if(Needc)//依次检查是否进行计算字符数、单词、行数等操作
-					{
-						int charnum = countcharacter(array[i].getName());
-						outstr = outstr + array[i].getName()+ ",字符数：" + charnum + " \r\n";
-					}
-					if(Needw)
-					{
-						if(!Neede)
-						{
-							int wordnum = countword(array[i].getName(),array[i].getName(),1);
-							outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
-						}
-						else
-						{
-							int wordnum;
-							if(Needo)
-								wordnum = countword(array[i].getName(),args[args.length-3],2);
-							else
-								wordnum = countword(array[i].getName(),args[args.length-1],2);
-							outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
-						}
-					}
-					if(Needl)
-					{
-						int linenum = countline(array[i].getName());
-						outstr = outstr + array[i].getName() + ",行数：" + linenum + " \r\n";
-					}
-					if(Needa)
-					{
-						int clinenum[] = new int [4];
-						clinenum = complicatedline(array[i].getName());
-						outstr = outstr + array[i].getName() + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + " \r\n";
-					}
-	            }	            
-	        }
-	        if(Needo)
+			if(args[countnum].charAt(0)=='*')
 			{
-				outputresult(1,outstr,args[args.length-1]);
+				File file = new File("./");   
+		        // 获得该文件夹内的所有文件   
+		        File[] array = file.listFiles();   
+		        for(int i=0;i<array.length;i++)
+		        {   
+		            if(array[i].isFile()&&array[i].getName().endsWith(args[countnum].substring(1)))//如果是文件，检查后缀名是否相符
+		            {   
+		            	if(Needc)//依次检查是否进行计算字符数、单词、行数等操作
+						{
+							int charnum = countcharacter(array[i].getName());
+							outstr = outstr + array[i].getName()+ ",字符数：" + charnum + "\r\n";
+						}
+						if(Needw)
+						{
+							if(!Neede)
+							{
+								int wordnum = countword(array[i].getName(),array[i].getName(),1);
+								outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
+							}
+							else
+							{
+								int wordnum;
+								if(Needo)
+									wordnum = countword(array[i].getName(),args[args.length-3],2);
+								else
+									wordnum = countword(array[i].getName(),args[args.length-1],2);
+								outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
+							}
+						}
+						if(Needl)
+						{
+							int linenum = countline(array[i].getName());
+							outstr = outstr + array[i].getName() + ",行数：" + linenum + "\r\n";
+						}
+						if(Needa)
+						{
+							int clinenum[] = new int [4];
+							clinenum = complicatedline(array[i].getName());
+							outstr = outstr + array[i].getName() + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + "\r\n";
+						}
+		            }	            
+		        }
+		        if(Needo)
+				{
+					outputresult(1,outstr,args[args.length-1]);
+				}
+				else
+				{
+					outputresult(2,outstr,strc);
+				}
 			}
 			else
-			{
-				outputresult(2,outstr,strc);
+			{//白盒测试中更改了需求，加上博客园中博客也在18号后更改了需求，不得不又进行修改，这里写的是全路径下的处理方式
+				int pointposition = -1;
+				for(int i=args[countnum].length()-1;i>=0;i--)
+				{
+					if(args[countnum].charAt(i)=='.')
+						if(args[countnum].charAt(i-1)=='*')
+							pointposition = i;
+				}
+				if(pointposition == -1)
+				{
+					System.out.println("路径输入错误！");
+				}
+				File file = new File("./");   
+		        // 获得该文件夹内的所有文件   
+		        File[] array = file.listFiles();   
+		        for(int i=0;i<array.length;i++)
+		        {   
+		            if(array[i].isFile()&&array[i].getName().endsWith(args[countnum].substring(pointposition)))//如果是文件，检查后缀名是否相符
+		            {   
+		            	if(Needc)//依次检查是否进行计算字符数、单词、行数等操作
+						{
+							int charnum = countcharacter(array[i].getName());
+							outstr = outstr + array[i].getName()+ ",字符数：" + charnum + "\r\n";
+						}
+						if(Needw)
+						{
+							if(!Neede)
+							{
+								int wordnum = countword(array[i].getName(),array[i].getName(),1);
+								outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
+							}
+							else
+							{
+								int wordnum;
+								if(Needo)
+									wordnum = countword(array[i].getName(),args[args.length-3],2);
+								else
+									wordnum = countword(array[i].getName(),args[args.length-1],2);
+								outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
+							}
+						}
+						if(Needl)
+						{
+							int linenum = countline(array[i].getName());
+							outstr = outstr + array[i].getName() + ",行数：" + linenum + "\r\n";
+						}
+						if(Needa)
+						{
+							int clinenum[] = new int [4];
+							clinenum = complicatedline(array[i].getName());
+							outstr = outstr + array[i].getName() + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + "\r\n";
+						}
+		            }	            
+		        }
+		        if(Needo)
+				{
+					outputresult(1,outstr,args[args.length-1]);
+				}
+				else
+				{
+					outputresult(2,outstr,strc);
+				}
+			
 			}
+			
 	       
 		} 		
 	}
