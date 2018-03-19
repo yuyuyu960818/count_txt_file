@@ -437,44 +437,45 @@ public class main {
 				{
 					System.out.println("路径输入错误！");
 				}
-				File file = new File("./");   
+				File file = new File(args[countnum].substring(0,pointposition-1)); 
 		        // 获得该文件夹内的所有文件   
 		        File[] array = file.listFiles();   
 		        for(int i=0;i<array.length;i++)
 		        {   
 		            if(array[i].isFile()&&array[i].getName().endsWith(args[countnum].substring(pointposition)))//如果是文件，检查后缀名是否相符
 		            {   
+		            	System.out.println(array[i].getName());
 		            	if(Needc)//依次检查是否进行计算字符数、单词、行数等操作
 						{
-							int charnum = countcharacter(array[i].getName());
+							int charnum = countcharacter(args[countnum].substring(0,pointposition-1) + array[i].getName());
 							outstr = outstr + array[i].getName()+ ",字符数：" + charnum + "\r\n";
 						}
 						if(Needw)
 						{
 							if(!Neede)
 							{
-								int wordnum = countword(array[i].getName(),array[i].getName(),1);
+								int wordnum = countword(args[countnum].substring(0,pointposition-1) + array[i].getName(),args[countnum].substring(0,pointposition-1) + array[i].getName(),1);
 								outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
 							}
 							else
 							{
 								int wordnum;
 								if(Needo)
-									wordnum = countword(array[i].getName(),args[args.length-3],2);
+									wordnum = countword(args[countnum].substring(0,pointposition-1) + array[i].getName(),args[countnum].substring(0,pointposition-1) + args[args.length-3],2);
 								else
-									wordnum = countword(array[i].getName(),args[args.length-1],2);
+									wordnum = countword(args[countnum].substring(0,pointposition-1) + array[i].getName(),args[countnum].substring(0,pointposition-1) + args[args.length-1],2);
 								outstr = outstr + array[i].getName() + ",单词数：" + wordnum + "\r\n";
 							}
 						}
 						if(Needl)
 						{
-							int linenum = countline(array[i].getName());
+							int linenum = countline(args[countnum].substring(0,pointposition-1) + array[i].getName());
 							outstr = outstr + array[i].getName() + ",行数：" + linenum + "\r\n";
 						}
 						if(Needa)
 						{
 							int clinenum[] = new int [4];
-							clinenum = complicatedline(array[i].getName());
+							clinenum = complicatedline(args[countnum].substring(0,pointposition-1) + array[i].getName());
 							outstr = outstr + array[i].getName() + ", 代码行/空行/注释行： " + clinenum[3] + "/" + clinenum[1] + "/" + clinenum[2] + "\r\n";
 						}
 		            }	            
